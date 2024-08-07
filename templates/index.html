@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Terminal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Interactive Terminal</h1>
+    <form id="commandForm">
+        <input type="text" id="commandInput" placeholder="Enter command here">
+        <button type="submit">Run</button>
+    </form>
+    <pre id="output"></pre>
+
+    <script>
+        var socket = io();
+        var form = document.getElementById('commandForm');
+        var input = document.getElementById('commandInput');
+        var output = document.getElementById('output');
+
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            socket.emit('run_command', {command: input.value});
+            input.value = '';
+        };
+
+        socket.on('terminal_output', function(msg) {
+            output.innerHTML += msg.data + "\n";
+        });
+    </script>
+</body>
+</html>
